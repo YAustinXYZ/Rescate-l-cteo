@@ -8,3 +8,10 @@ body{
         color: red;
         text-align: center;
     }
+
+
+  
+button{
+    background: red;
+    color: white;
+}

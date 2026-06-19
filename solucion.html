@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Productores · Rescate Lácteo</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo"><span class="emoji">🥛</span> Rescate Lácteo</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="solucion.html" class="activo">Productores</a></li>
+        <li><a href="registro.html">Registrar</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="encabezado-pagina">
+      <h1>Productores</h1>
+      <p class="contador-resultados" id="contador">Mostrando 0 de 0 productores</p>
+    </section>
+
+    <section class="controles">
+      <input id="buscador" class="campo-busqueda" type="text" placeholder="Buscar por nombre o comunidad...">
+      <select id="filtro-comunidad" class="select-filtro">
+        <option value="">Todas las comunidades</option>
+      </select>
+      <select id="filtro-estado" class="select-filtro">
+        <option value="">Todos los estados</option>
+        <option value="activo">Activo</option>
+        <option value="en dificultad">En dificultad</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+      <button id="btn-limpiar-filtros" class="btn-peligro">✖ Limpiar filtros</button>
+    </section>
+
+    <p class="estado-vacio" id="estado-vacio" style="display:none">No se encontraron productores.</p>
+
+    <div id="contenedor-productores" class="grid-productores"></div>
+
+    <section class="mis-guardados">
+      <h2>Mis Productores Guardados</h2>
+      <div id="guardados-lista"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>🥛 Rescate Lácteo — Apoyando a los productores de Tilarán</p>
+    <p>ISW-521 Programación en Ambiente Web I · UTN · 2026</p>
+  </footer>
+
+  <script src="js/solucion.js"></script>
+</body>
+</html>
