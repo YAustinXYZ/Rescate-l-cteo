@@ -376,7 +376,7 @@ Almacena:
 
 ✅ Validación de formularios.
 
-✅ Consumo de datos JSON.
+✅ Consumo de datos JSON..
 
 ✅ Uso de Fetch API.
 
