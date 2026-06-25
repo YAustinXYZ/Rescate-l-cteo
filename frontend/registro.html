@@ -4,18 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Registrar Productor · Rescate Lácteo</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/interface.css">
+    <link class = "ICONO-NAVEGADOR"rel="icon" type="image/x-icon" href="assets/images/logo.png">
 </head>
 <body>
   <header>
-    <div class="logo"><span class="emoji">🥛</span> Rescate Lácteo</div>
+    <div class="brand-logo">
+      <a href="index.html"  aria-label="Rescate Lácteo">
+        <img src="assets/images/logo.png" alt="Rescate Lácteo logo"> Rescate lácteo
+      </a>
+    </div>
     <nav>
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="solucion.html">Productores</a></li>
         <li><a href="registro.html" class="activo">Registrar</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
       </ul>
     </nav>
+    
   </header>
 
   <main class="container">
@@ -23,13 +30,13 @@
       <h1>Registrar Productor</h1>
     </section>
 
-    <div class="contenedor-principal" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+    <div class="contenedor-principal">
       <div class="columna-formulario">
         <form id="form-productor" class="formulario" novalidate>
           <div class="grupo-campo">
             <label for="nombre">Nombre completo</label>
             <input id="nombre" name="nombre" type="text" required minlength="3">
-            <div class="mensaje-error" id="error-nombre" style="display:none"></div>
+            <div class="mensaje-error-campo" id="error-nombre"></div>
           </div>
 
           <div class="grupo-campo">
@@ -43,13 +50,13 @@
               <option>Quebrada Grande</option>
               <option>Río Chiquito</option>
             </select>
-            <div class="mensaje-error" id="error-comunidad" style="display:none"></div>
+            <div class="mensaje-error-campo" id="error-comunidad"></div>
           </div>
 
           <div class="grupo-campo">
             <label for="produccion">Producción diaria (litros)</label>
             <input id="produccion" name="produccion" type="number" min="1" max="9999" required>
-            <div class="mensaje-error" id="error-produccion" style="display:none"></div>
+            <div class="mensaje-error-campo" id="error-produccion"></div>
           </div>
 
           <div class="grupo-campo">
@@ -63,13 +70,13 @@
               <option>Yogurt</option>
               <option>Helados artesanales</option>
             </select>
-            <div class="mensaje-error" id="error-producto" style="display:none"></div>
+            <div class="mensaje-error-campo" id="error-producto"></div>
           </div>
 
           <div class="grupo-campo">
             <label for="telefono">Teléfono (####-####)</label>
             <input id="telefono" name="telefono" type="text" required>
-            <div class="mensaje-error" id="error-telefono" style="display:none"></div>
+            <div class="mensaje-error-campo" id="error-telefono"></div>
           </div>
 
           <div class="grupo-campo">
@@ -80,15 +87,18 @@
               <option value="en dificultad">en dificultad</option>
               <option value="inactivo">inactivo</option>
             </select>
-            <div class="mensaje-error" id="error-estado" style="display:none"></div>
+            <div class="mensaje-error-campo" id="error-estado"></div>
           </div>
 
-          <div style="display:flex;gap:8px;">
+          <div class="fila-botones">
             <button type="submit" class="btn-primario">💾 Guardar Registro</button>
             <button type="button" id="btn-limpiar" class="btn-secundario">🗑 Limpiar Formulario</button>
           </div>
 
-          <div id="form-mensaje" class="mensaje" style="margin-top:12px;display:none"></div>
+          <div id="form-mensaje" class="mensaje"></div>
+          <div id="form-enlace-productores" class="enlace-post-registro" hidden>
+            <a href="solucion.html" class="btn-secundario">Ver en listado de productores →</a>
+          </div>
         </form>
       </div>
 

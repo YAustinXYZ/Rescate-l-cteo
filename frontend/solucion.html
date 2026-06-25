@@ -4,24 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Productores · Rescate Lácteo</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/interface.css">
+  
+  <link class = "ICONO-NAVEGADOR"rel="icon" type="image/x-icon" href="assets/images/logo.png">
+  
+  
+  
+ 
+  
 </head>
 <body>
   <header>
-    <div class="logo"><span class="emoji">🥛</span> Rescate Lácteo</div>
+    <div class="brand-logo">
+      <a href="index.html"  aria-label="Rescate Lácteo">
+        <img src="assets/images/logo.png" alt="Rescate Lácteo logo"> Rescate lácteo
+      </a>
+    </div>
+
     <nav>
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="solucion.html" class="activo">Productores</a></li>
         <li><a href="registro.html">Registrar</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
       </ul>
     </nav>
+    
   </header>
 
   <main class="container">
     <section class="encabezado-pagina">
       <h1>Productores</h1>
       <p class="contador-resultados" id="contador">Mostrando 0 de 0 productores</p>
+      <p class="ayuda-interaccion">
+        Usá la búsqueda y filtros para encontrar productores.
+        <strong>Agregar a favoritos</strong> guarda el productor en tu navegador (localStorage) para consultarlo después.
+        Para registrar un productor nuevo, usá la página <a href="registro.html">Registrar</a>.
+      </p>
     </section>
 
     <section class="controles">
@@ -38,12 +57,13 @@
       <button id="btn-limpiar-filtros" class="btn-peligro">✖ Limpiar filtros</button>
     </section>
 
-    <p class="estado-vacio" id="estado-vacio" style="display:none">No se encontraron productores.</p>
+    <p class="estado-vacio" id="estado-vacio">No se encontraron productores.</p>
 
     <div id="contenedor-productores" class="grid-productores"></div>
 
     <section class="mis-guardados">
-      <h2>Mis Productores Guardados</h2>
+      <h2>Mis productores favoritos</h2>
+      <p class="ayuda-favoritos">Productores que marcaste con ⭐. Se guardan en localStorage de tu navegador.</p>
       <div id="guardados-lista"></div>
     </section>
   </main>
