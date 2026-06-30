@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Compradores · Rescate Lácteo</title>
+  <link rel="stylesheet" href="css/interface.css">
+  <link class="ICONO-NAVEGADOR" rel="icon" type="image/x-icon" href="assets/images/logo.png">
+</head>
+<body>
+  <header>
+    <div class="brand-logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="assets/images/logo.png" alt="Rescate Lácteo logo" width="48" height="48" style="display:block; width:48px; height:48px;">
+      <a href="index.html" aria-label="Rescate Lácteo" style="display:inline-flex; align-items:center; color: inherit; font-weight: 700;">Rescate lácteo</a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="solucion.html">Productores</a></li>
+        <li><a href="compradores.html" class="activo">Compradores</a></li>
+        <li><a href="registro.html">Registrar</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="encabezado-pagina">
+      <h1>Compradores</h1>
+      <p class="contador-resultados" id="contador">Mostrando 0 de 0 compradores</p>
+      <p class="ayuda-interaccion">
+        Usa la búsqueda y filtros para encontrar compradores según su región y productos buscados.
+        <strong>Agregar a favoritos</strong> guarda el comprador en tu navegador (localStorage).
+        Para registrar un comprador nuevo, usa la página <a href="registro-comprador.html">Registrar comprador</a>.
+      </p>
+    </section>
+
+    <section class="controles">
+      <input id="buscador" class="campo-busqueda" type="text" placeholder="Buscar por nombre o región...">
+      <select id="filtro-comunidad" class="select-filtro">
+        <option value="">Todas las regiones</option>
+      </select>
+      <button id="btn-limpiar-filtros" class="btn-peligro">✖ Limpiar filtros</button>
+    </section>
+
+    <p class="estado-vacio" id="estado-vacio">No se encontraron compradores.</p>
+
+    <div id="contenedor-compradores" class="grid-productores"></div>
+
+    <section class="mis-guardados">
+      <h2>Mis compradores favoritos</h2>
+      <p class="ayuda-favoritos">Compradores que marcaste con ⭐. Se guardan en localStorage de tu navegador.</p>
+      <div id="guardados-lista"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Rescate Lácteo — Conectando productores y compradores de lácteos locales.</p>
+    <p>Proyecto académico UTN · ISW-521 · 2026</p>
+    <p class="copyright">© 2026 Rescate Lácteo. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="js/compradores.js"></script>
+</body>
+</html>
