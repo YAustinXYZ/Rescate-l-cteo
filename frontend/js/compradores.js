@@ -1,61 +1,38 @@
 /**
- * solucion.js
- * ¿Qué hace?: Controla la página de listado interactivo de productores,
- *             combinando el JSON base con los registros del localStorage.
- * ¿Por qué?: Permitir búsqueda, filtrado, guardar favoritos en localStorage y ver detalles,
- *             incluyendo los productores registrados desde el formulario.
- * Parámetros: ninguno (usa selectores DOM y fetch).
- * Retorna: nada.
+ * compradores.js
+ * ¿Qué hace?: Controla la página de listado de compradores,
+ *             combinando el JSON base con registros guardados en localStorage.
+ * ¿Por qué?: Permitir búsqueda, filtrado, favoritos y detalles de compradores.
  */
 
-// Variables globales de estado
-var todosLosProductores = [];
-var productoresFiltrados = [];
-var productoresGuardados = [];
+var todosLosCompradores = [];
+var compradoresFiltrados = [];
+var compradoresGuardados = [];
 
-// Elementos del DOM
-var contenedor = document.getElementById('contenedor-productores');
+var contenedor = document.getElementById('contenedor-compradores');
 var buscador = document.getElementById('buscador');
 var filtroComunidad = document.getElementById('filtro-comunidad');
-var filtroCondicion = document.getElementById('filtro-condicion');
 var btnLimpiar = document.getElementById('btn-limpiar-filtros');
 var estadoVacio = document.getElementById('estado-vacio');
 var contadorP = document.getElementById('contador');
 var guardadosLista = document.getElementById('guardados-lista');
 
-/**
- * esProductorLocal
- * ¿Qué hace?: Indica si un productor fue registrado por el usuario (no viene del JSON base).
- * ¿Por qué?: Mostrar badge "Nuevo" en tarjetas locales.
- * Parámetros: p (objeto productor).
- * Retorna: boolean.
- */
-function esProductorLocal(p) {
+function esCompradorLocal(p) {
   return p.esLocal === true || p.id > 100;
 }
 
 function obtenerImagenPerfil(p) {
   if (p.imagen) return p.imagen;
-  // Imágenes de campesinos costarricenses locales
-  // Fotos auténticas de productores lecheros de Costa Rica
-  // Utilizadas con propósitos educativos en el proyecto Rescate Lácteo
-  var fotosProductores = [
-    './assets/images/campesino-1.jpg',
-    './assets/images/campesino-2.jpg',
-    './assets/images/campesino-3.jpg',
-    './assets/images/campesino-4.jpg',
-    './assets/images/campesino-5.jpg'
-  ];
-  var idx = (p.id - 1) % fotosProductores.length;
-  return fotosProductores[idx] || fotosProductores[0];
+  var clave = encodeURIComponent((p.nombre || 'persona').trim());
+  return 'https://i.pravatar.cc/200?u=' + clave;
 }
 
-function obtenerResenasProductor(producerId) {
-  var data = localStorage.getItem('resenas-productores');
+function obtenerResenasComprador(comprador) {
+  var data = localStorage.getItem('resenas-compradores');
   if (!data) return [];
   try {
     var todas = JSON.parse(data);
-    return todas.filter(function(r) { return r.producerId === producerId; });
+    return todas.filter(function(r) { return r.producerId === comprador; });
   } catch(e) {
     return [];
   }
@@ -79,23 +56,8 @@ function crearElementoEstrellas(promedio) {
   return div;
 }
 
-function obtenerCondicion(p) {
-  if (p.condicion) return p.condicion;
-  if (p.estado === 'activo') return 'estable';
-  if (p.estado === 'en dificultad') return 'en crisis';
-  if (p.estado === 'inactivo') return 'vulnerabilidad';
-  return p.estado || 'desconocido';
-}
-
-/**
- * obtenerRegistrosLocales
- * ¿Qué hace?: Lee los productores registrados por el usuario desde localStorage.
- * ¿Por qué?: Combinarlos con el JSON para tener una lista unificada.
- * Parámetros: ninguno.
- * Retorna: array de productores locales (puede estar vacío).
- */
 function obtenerRegistrosLocales() {
-  var data = localStorage.getItem('registros-lacteo');
+  var data = localStorage.getItem('registros-compradores');
   if (!data) return [];
   try {
     return JSON.parse(data);
@@ -104,84 +66,55 @@ function obtenerRegistrosLocales() {
   }
 }
 
-/**
- * combinarProductores
- * ¿Qué hace?: Une productores del JSON con los del localStorage, evitando duplicados.
- * ¿Por qué?: Mostrar una lista completa que incluya registros nuevos del usuario.
- * Parámetros: jsonData (array) productores base del archivo JSON.
- * Retorna: array combinado.
- */
-function combinarProductores(jsonData) {
+function combinarCompradores(jsonData) {
   var locales = obtenerRegistrosLocales();
   var idsJson = jsonData.map(function(p) { return p.id; });
   var soloNuevos = locales.filter(function(p) { return idsJson.indexOf(p.id) === -1; });
   return jsonData.concat(soloNuevos);
 }
 
-/**
- * cargarProductores
- * ¿Qué hace?: Lee productores desde el archivo JSON, los combina con localStorage
- *             e inicializa el estado.
- * ¿Por qué?: Necesitamos datos dinámicos para renderizar la interfaz.
- * Parámetros: ninguno.
- * Retorna: nada.
- */
-function cargarProductores() {
-  fetch('./data/productores.json')
+function cargarCompradores() {
+  fetch('./data/compradores.json')
     .then(function(res) { return res.json(); })
     .then(function(data) {
-      todosLosProductores = combinarProductores(data);
-      productoresFiltrados = todosLosProductores.slice();
+      todosLosCompradores = combinarCompradores(data);
+      compradoresFiltrados = todosLosCompradores.slice();
       poblarFiltroComunidad();
-      renderizarProductores(productoresFiltrados);
-      actualizarContador(productoresFiltrados.length);
+      renderizarCompradores(compradoresFiltrados);
+      actualizarContador(compradoresFiltrados.length);
     })
     .catch(function(err) {
-      console.error('Error cargando JSON:', err);
+      console.error('Error cargando JSON de compradores:', err);
       var locales = obtenerRegistrosLocales();
       if (locales.length > 0) {
-        todosLosProductores = locales;
-        productoresFiltrados = locales.slice();
+        todosLosCompradores = locales;
+        compradoresFiltrados = locales.slice();
         poblarFiltroComunidad();
-        renderizarProductores(productoresFiltrados);
-        actualizarContador(productoresFiltrados.length);
+        renderizarCompradores(compradoresFiltrados);
+        actualizarContador(compradoresFiltrados.length);
       } else {
-        mostrarMensaje('No se pudo cargar la lista de productores.', 'error');
+        mostrarMensaje('No se pudo cargar la lista de compradores.', 'error');
       }
     });
 }
 
-/**
- * poblarFiltroComunidad
- * ¿Qué hace?: Llena el select de comunidades con valores únicos.
- * ¿Por qué?: Permitir filtrar por comunidad basada en datos reales (incluyendo locales).
- * Parámetros: ninguno.
- * Retorna: nada.
- */
 function poblarFiltroComunidad() {
   while (filtroComunidad.options.length > 1) {
     filtroComunidad.remove(1);
   }
-  var comunidades = todosLosProductores.reduce(function(acc, cur) {
+  var regiones = todosLosCompradores.reduce(function(acc, cur) {
     if (acc.indexOf(cur.comunidad) === -1) acc.push(cur.comunidad);
     return acc;
   }, []);
-  comunidades.forEach(function(c) {
+  regiones.forEach(function(r) {
     var opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
+    opt.value = r;
+    opt.textContent = r;
     filtroComunidad.appendChild(opt);
   });
 }
 
-/**
- * renderizarProductores
- * ¿Qué hace?: Dibuja en el DOM las tarjetas para cada productor en la lista.
- * ¿Por qué?: Mostrar resultados al usuario.
- * Parámetros: lista (array) de productores.
- * Retorna: nada.
- */
-function renderizarProductores(lista) {
+function renderizarCompradores(lista) {
   contenedor.innerHTML = '';
   if (!lista || lista.length === 0) {
     estadoVacio.style.display = 'block';
@@ -191,9 +124,7 @@ function renderizarProductores(lista) {
   estadoVacio.style.display = 'none';
   lista.forEach(function(p) {
     var card = document.createElement('div');
-    var condicion = obtenerCondicion(p);
-    var condicionClass = condicion === 'en crisis' ? 'dificultad' : (condicion === 'estable' ? 'activo' : 'inactivo');
-    card.className = 'tarjeta estado-' + condicionClass;
+    card.className = 'tarjeta';
     card.dataset.id = p.id;
 
     var foto = document.createElement('img');
@@ -203,19 +134,17 @@ function renderizarProductores(lista) {
 
     var header = document.createElement('div');
     header.className = 'tarjeta-header';
-
     var h3 = document.createElement('h3');
     h3.textContent = p.nombre;
     header.appendChild(h3);
-
-    if (esProductorLocal(p)) {
+    if (esCompradorLocal(p)) {
       var badgeNuevo = document.createElement('span');
       badgeNuevo.className = 'badge badge-nuevo';
       badgeNuevo.textContent = 'Nuevo';
       header.appendChild(badgeNuevo);
     }
 
-    var resenas = obtenerResenasProductor(p.id);
+    var resenas = obtenerResenasComprador(p.id);
     var promedio = calcularPromedioEstrellas(resenas);
     var estrellas = crearElementoEstrellas(promedio);
 
@@ -232,21 +161,14 @@ function renderizarProductores(lista) {
     }
 
     var info = document.createElement('p');
-    info.textContent = p.comunidad + ' · ' + p.produccionDiariaLitros + ' L/día';
+    var ubicacion = p.lugarEspecifico ? (p.comunidad + ' · ' + p.lugarEspecifico) : p.comunidad;
+    info.textContent = ubicacion + ' · ' + p.produccionDiariaLitros + ' L/día';
 
     var contacto = document.createElement('p');
     contacto.textContent = 'Contacto: ' + p.contacto;
 
-    var condicion = obtenerCondicion(p);
-    var span = document.createElement('span');
-    span.className = 'badge ' + (condicion === 'estable' ? 'badge-activo' : (condicion === 'en crisis' ? 'badge-dificultad' : 'badge-inactivo'));
-    span.textContent = condicion;
-
-    var btnResena = document.createElement('button');
-    btnResena.textContent = '✍️ Agregar reseña';
-    btnResena.className = 'btn-secundario';
-    btnResena.setAttribute('aria-label', 'Agregar reseña para ' + p.nombre);
-    btnResena.addEventListener('click', function() { abrirModalResena(p.id, p.nombre, 'productor'); });
+    var correo = document.createElement('p');
+    correo.textContent = 'Correo: ' + (p.correo || '—');
 
     var btnFavorito = document.createElement('button');
     btnFavorito.textContent = '⭐ Agregar a favoritos';
@@ -260,7 +182,7 @@ function renderizarProductores(lista) {
     btnDetalles.setAttribute('aria-label', 'Ver detalles de ' + p.nombre);
     btnDetalles.addEventListener('click', function() { mostrarDetalles(p.id); });
 
-    var estaGuardado = productoresGuardados.some(function(x) { return x.id === p.id; });
+    var estaGuardado = compradoresGuardados.some(function(x) { return x.id === p.id; });
     if (estaGuardado) {
       card.classList.add('guardada');
       btnFavorito.textContent = '⭐ En favoritos';
@@ -270,14 +192,18 @@ function renderizarProductores(lista) {
     card.appendChild(foto);
     card.appendChild(header);
     card.appendChild(calificacion);
-    card.appendChild(span);
     card.appendChild(info);
     card.appendChild(contacto);
+    card.appendChild(correo);
+    var btnResena = document.createElement('button');
+    btnResena.textContent = '✏️ Agregar reseña';
+    btnResena.className = 'btn-secundario';
+    btnResena.setAttribute('aria-label', 'Agregar reseña para ' + p.nombre);
+    btnResena.addEventListener('click', function() { abrirModalResena(p.id, p.nombre, 'comprador'); });
     card.appendChild(btnResena);
     card.appendChild(btnFavorito);
     card.appendChild(document.createTextNode(' '));
     card.appendChild(btnDetalles);
-
     contenedor.appendChild(card);
   });
 }
@@ -405,16 +331,7 @@ function guardarResena(id, tipo, estrellas, comentario) {
   });
   localStorage.setItem(clave, JSON.stringify(resenas));
   mostrarMensaje('Reseña guardada correctamente.', 'exito');
-  renderizarProductores(productoresFiltrados);
-}
-
-function cargarDatosInicialesProductores() {
-  cargarProductores();
-  buscador.addEventListener('input', filtrarYBuscar);
-  filtroComunidad.addEventListener('change', filtrarYBuscar);
-  filtroCondicion.addEventListener('change', filtrarYBuscar);
-  btnLimpiar.addEventListener('click', limpiarFiltros);
-  cargarGuardadosDeStorage();
+  renderizarCompradores(compradoresFiltrados);
 }
 
 function mostrarMensaje(texto, tipo) {
@@ -427,49 +344,29 @@ function mostrarMensaje(texto, tipo) {
   setTimeout(function() { msg.style.display = 'none'; }, 3000);
 }
 
-/*
-function cargarDatosInicialesProductores() {
-
-/**
- * filtrarYBuscar
- * ¿Qué hace?: Filtra la lista global según búsqueda y selects.
- * ¿Por qué?: Permitir búsquedas combinadas y filtros sobre todos los productores.
- * Parámetros: ninguno (lee valores desde inputs).
- * Retorna: nada.
- */
 function filtrarYBuscar() {
   var texto = buscador.value.trim().toLowerCase();
   var comunidad = filtroComunidad.value;
-  var condicion = filtroCondicion.value;
-
-  productoresFiltrados = todosLosProductores.filter(function(p) {
+  compradoresFiltrados = todosLosCompradores.filter(function(p) {
     var cumpleTexto = p.nombre.toLowerCase().includes(texto) || p.comunidad.toLowerCase().includes(texto);
     var cumpleComunidad = comunidad === '' ? true : p.comunidad === comunidad;
-    var cumpleCondicion = condicion === '' ? true : p.condicion === condicion;
-    return cumpleTexto && cumpleComunidad && cumpleCondicion;
+    return cumpleTexto && cumpleComunidad;
   });
 
-  renderizarProductores(productoresFiltrados);
-  actualizarContador(productoresFiltrados.length);
+  renderizarCompradores(compradoresFiltrados);
+  actualizarContador(compradoresFiltrados.length);
 }
 
-/**
- * guardarFavorito
- * ¿Qué hace?: Guarda un productor en la lista de favoritos y en localStorage.
- * ¿Por qué?: Permitir al usuario marcar productores de interés sin registrar uno nuevo.
- * Parámetros: id (number), tarjeta (elemento DOM opcional).
- * Retorna: nada.
- */
 function guardarFavorito(id, tarjeta) {
-  var p = todosLosProductores.find(function(x) { return x.id === id; });
+  var p = todosLosCompradores.find(function(x) { return x.id === id; });
   if (!p) return;
-  var existe = productoresGuardados.some(function(x) { return x.id === id; });
+  var existe = compradoresGuardados.some(function(x) { return x.id === id; });
   if (existe) {
-    mostrarMensaje('Este productor ya está en tus favoritos.', 'advertencia');
+    mostrarMensaje('Este comprador ya está en tus favoritos.', 'advertencia');
     return;
   }
-  productoresGuardados.push(p);
-  localStorage.setItem('guardados', JSON.stringify(productoresGuardados));
+  compradoresGuardados.push(p);
+  localStorage.setItem('guardados-compradores', JSON.stringify(compradoresGuardados));
   if (tarjeta) {
     tarjeta.classList.add('guardada');
     var btn = tarjeta.querySelector('.btn-secundario');
@@ -478,43 +375,29 @@ function guardarFavorito(id, tarjeta) {
       btn.disabled = true;
     }
   }
-  mostrarMensaje('Productor agregado a favoritos (localStorage).', 'exito');
+  mostrarMensaje('Comprador agregado a favoritos (localStorage).', 'exito');
   renderizarGuardados();
 }
 
-/**
- * cargarGuardadosDeStorage
- * ¿Qué hace?: Recupera la lista de favoritos desde localStorage.
- * ¿Por qué?: Mantener persistencia entre recargas.
- * Parámetros: ninguno.
- * Retorna: nada.
- */
 function cargarGuardadosDeStorage() {
-  var data = localStorage.getItem('guardados');
+  var data = localStorage.getItem('guardados-compradores');
   if (data) {
     try {
-      productoresGuardados = JSON.parse(data);
+      compradoresGuardados = JSON.parse(data);
     } catch(e) {
-      productoresGuardados = [];
+      compradoresGuardados = [];
     }
   }
   renderizarGuardados();
 }
 
-/**
- * renderizarGuardados
- * ¿Qué hace?: Muestra la sección de favoritos en el DOM.
- * ¿Por qué?: Permitir gestionar la lista guardada por el usuario.
- * Parámetros: ninguno.
- * Retorna: nada.
- */
 function renderizarGuardados() {
   guardadosLista.innerHTML = '';
-  if (!productoresGuardados || productoresGuardados.length === 0) {
+  if (!compradoresGuardados || compradoresGuardados.length === 0) {
     guardadosLista.innerHTML = '<p class="estado-vacio">No has agregado favoritos aún.</p>';
     return;
   }
-  productoresGuardados.forEach(function(p) {
+  compradoresGuardados.forEach(function(p) {
     var item = document.createElement('div');
     item.className = 'item-registro';
     item.innerHTML = '<div><strong>' + p.nombre + '</strong><div style="font-size:0.85rem;color:#555">' + p.comunidad + '</div></div>';
@@ -528,30 +411,16 @@ function renderizarGuardados() {
   });
 }
 
-/**
- * eliminarFavorito
- * ¿Qué hace?: Elimina un productor favorito por id.
- * ¿Por qué?: Permitir al usuario limpiar su lista.
- * Parámetros: id (number).
- * Retorna: nada.
- */
 function eliminarFavorito(id) {
-  productoresGuardados = productoresGuardados.filter(function(x) { return x.id !== id; });
-  localStorage.setItem('guardados', JSON.stringify(productoresGuardados));
+  compradoresGuardados = compradoresGuardados.filter(function(x) { return x.id !== id; });
+  localStorage.setItem('guardados-compradores', JSON.stringify(compradoresGuardados));
   renderizarGuardados();
-  renderizarProductores(productoresFiltrados);
-  mostrarMensaje('Productor quitado de favoritos.', 'exito');
+  renderizarCompradores(compradoresFiltrados);
+  mostrarMensaje('Comprador quitado de favoritos.', 'exito');
 }
 
-/**
- * mostrarDetalles
- * ¿Qué hace?: Muestra un modal con todos los datos del productor.
- * ¿Por qué?: Ver información completa sin salir de la página.
- * Parámetros: id (number).
- * Retorna: nada.
- */
 function mostrarDetalles(id) {
-  var p = todosLosProductores.find(function(x) { return x.id === id; });
+  var p = todosLosCompradores.find(function(x) { return x.id === id; });
   if (!p) return;
 
   var productos = Array.isArray(p.productosPrincipales)
@@ -562,15 +431,14 @@ function mostrarDetalles(id) {
   modal.className = 'modal-overlay';
   var box = document.createElement('div');
   box.className = 'modal-box';
-  var condicion = obtenerCondicion(p);
   box.innerHTML =
     '<h3>' + p.nombre + '</h3>' +
-    '<p><strong>Comunidad:</strong> ' + p.comunidad + '</p>' +
-    '<p><strong>Producción diaria:</strong> ' + p.produccionDiariaLitros + ' L</p>' +
-    '<p><strong>Productos:</strong> ' + productos + '</p>' +
-    '<p><strong>Condición:</strong> ' + condicion + '</p>' +
+    '<p><strong>Región:</strong> ' + p.comunidad + '</p>' +
+    '<p><strong>Demanda diaria:</strong> ' + p.produccionDiariaLitros + ' L</p>' +
+    '<p><strong>Productos buscados:</strong> ' + productos + '</p>' +
     '<p><strong>Descripción:</strong> ' + (p.descripcion || '—') + '</p>' +
-    '<p><strong>Contacto:</strong> ' + p.contacto + '</p>';
+    '<p><strong>Contacto:</strong> ' + p.contacto + '</p>' +
+    '<p><strong>Correo:</strong> ' + (p.correo || '—') + '</p>';
   var cerrar = document.createElement('button');
   cerrar.textContent = 'Cerrar';
   cerrar.className = 'btn-secundario';
@@ -582,38 +450,16 @@ function mostrarDetalles(id) {
   document.body.appendChild(modal);
 }
 
-/**
- * actualizarContador
- * ¿Qué hace?: Actualiza el párrafo contador con la cantidad mostrada.
- * ¿Por qué?: Informar al usuario cuántos resultados hay (incluye registros nuevos).
- * Parámetros: cantidad (number).
- * Retorna: nada.
- */
 function actualizarContador(cantidad) {
-  contadorP.textContent = 'Mostrando ' + cantidad + ' de ' + todosLosProductores.length + ' productores';
+  contadorP.textContent = 'Mostrando ' + cantidad + ' de ' + todosLosCompradores.length + ' compradores';
 }
 
-/**
- * limpiarFiltros
- * ¿Qué hace?: Restablece los inputs de búsqueda y filtros.
- * ¿Por qué?: Proveer una forma rápida de volver al estado inicial.
- * Parámetros: ninguno.
- * Retorna: nada.
- */
 function limpiarFiltros() {
   buscador.value = '';
   filtroComunidad.value = '';
-  filtroCondicion.value = '';
   filtrarYBuscar();
 }
 
-/**
- * mostrarMensaje
- * ¿Qué hace?: Muestra mensajes transitorios de éxito/error/advertencia.
- * ¿Por qué?: Retroalimentación al usuario.
- * Parámetros: texto (string), tipo (string).
- * Retorna: nada.
- */
 function mostrarMensaje(texto, tipo) {
   var div = document.createElement('div');
   div.className = 'mensaje visible ' + (tipo === 'exito' ? 'mensaje-exito' : (tipo === 'error' ? 'mensaje-error' : 'mensaje-advertencia'));
@@ -628,10 +474,8 @@ function mostrarMensaje(texto, tipo) {
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
   cargarGuardadosDeStorage();
-  cargarProductores();
-
+  cargarCompradores();
   buscador.addEventListener('input', filtrarYBuscar);
   filtroComunidad.addEventListener('change', filtrarYBuscar);
-  filtroCondicion.addEventListener('change', filtrarYBuscar);
   btnLimpiar.addEventListener('click', limpiarFiltros);
 });

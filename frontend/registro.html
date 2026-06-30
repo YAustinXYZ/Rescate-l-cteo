@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Registrar Productor · Rescate Lácteo</title>
+  <title>Registro · Rescate Lácteo</title>
   <link rel="stylesheet" href="css/interface.css">
-    <link class = "ICONO-NAVEGADOR"rel="icon" type="image/x-icon" href="assets/images/logo.png">
+  <link class="ICONO-NAVEGADOR" rel="icon" type="image/x-icon" href="assets/images/logo.png">
 </head>
 <body>
   <header>
-    <div class="brand-logo">
-      <a href="index.html"  aria-label="Rescate Lácteo">
-        <img src="assets/images/logo.png" alt="Rescate Lácteo logo"> Rescate lácteo
-      </a>
+     <div class="brand-logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="assets/images/logo.png" alt="Rescate Lácteo logo" width="48" height="48" style="display:block; width:48px; height:48px;">
+      <a href="index.html" aria-label="Rescate Lácteo" style="display:inline-flex; align-items:center; color: inherit; font-weight: 700;">Rescate lácteo</a>
     </div>
     <nav>
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="solucion.html">Productores</a></li>
+        <li><a href="compradores.html">Compradores</a></li>
         <li><a href="registro.html" class="activo">Registrar</a></li>
         <li><a href="noticias.html">Noticias</a></li>
       </ul>
@@ -26,96 +26,20 @@
   </header>
 
   <main class="container">
-    <section class="encabezado-pagina">
-      <h1>Registrar Productor</h1>
+    <section class="hero">
+      <h1>Registrar en Rescate Lácteo</h1>
+      <p>Elige el tipo de registro que deseas completar. Así verás el formulario correcto y no tendrás opciones mezcladas.</p>
+      <div class="botones">
+        <a class="btn-primario" href="registro-productor.html">Registrar productor</a>
+        <a class="btn-secundario" href="registro-comprador.html">Registrar comprador</a>
+      </div>
     </section>
-
-    <div class="contenedor-principal">
-      <div class="columna-formulario">
-        <form id="form-productor" class="formulario" novalidate>
-          <div class="grupo-campo">
-            <label for="nombre">Nombre completo</label>
-            <input id="nombre" name="nombre" type="text" required minlength="3">
-            <div class="mensaje-error-campo" id="error-nombre"></div>
-          </div>
-
-          <div class="grupo-campo">
-            <label for="comunidad">Comunidad</label>
-            <select id="comunidad" name="comunidad" required>
-              <option value="">Seleccione...</option>
-              <option>Cabeceras de Tilarán</option>
-              <option>Tronadora</option>
-              <option>El Dos</option>
-              <option>La Florida</option>
-              <option>Quebrada Grande</option>
-              <option>Río Chiquito</option>
-            </select>
-            <div class="mensaje-error-campo" id="error-comunidad"></div>
-          </div>
-
-          <div class="grupo-campo">
-            <label for="produccion">Producción diaria (litros)</label>
-            <input id="produccion" name="produccion" type="number" min="1" max="9999" required>
-            <div class="mensaje-error-campo" id="error-produccion"></div>
-          </div>
-
-          <div class="grupo-campo">
-            <label for="producto">Producto principal</label>
-            <select id="producto" name="producto" required>
-              <option value="">Seleccione...</option>
-              <option>Leche fresca</option>
-              <option>Queso</option>
-              <option>Natilla</option>
-              <option>Mantequilla</option>
-              <option>Yogurt</option>
-              <option>Helados artesanales</option>
-            </select>
-            <div class="mensaje-error-campo" id="error-producto"></div>
-          </div>
-
-          <div class="grupo-campo">
-            <label for="telefono">Teléfono (####-####)</label>
-            <input id="telefono" name="telefono" type="text" required>
-            <div class="mensaje-error-campo" id="error-telefono"></div>
-          </div>
-
-          <div class="grupo-campo">
-            <label for="estado">Estado</label>
-            <select id="estado" name="estado" required>
-              <option value="">Seleccione...</option>
-              <option value="activo">activo</option>
-              <option value="en dificultad">en dificultad</option>
-              <option value="inactivo">inactivo</option>
-            </select>
-            <div class="mensaje-error-campo" id="error-estado"></div>
-          </div>
-
-          <div class="fila-botones">
-            <button type="submit" class="btn-primario">💾 Guardar Registro</button>
-            <button type="button" id="btn-limpiar" class="btn-secundario">🗑 Limpiar Formulario</button>
-          </div>
-
-          <div id="form-mensaje" class="mensaje"></div>
-          <div id="form-enlace-productores" class="enlace-post-registro" hidden>
-            <a href="solucion.html" class="btn-secundario">Ver en listado de productores →</a>
-          </div>
-        </form>
-      </div>
-
-      <div class="columna-registros">
-        <section class="lista-registros" id="lista-registros">
-          <h2>Registros guardados</h2>
-        </section>
-      </div>
-    </div>
-
   </main>
 
   <footer>
-    <p>🥛 Rescate Lácteo — Apoyando a los productores de Tilarán</p>
-    <p>ISW-521 Programación en Ambiente Web I · UTN · 2026</p>
+    <p>Rescate Lácteo — Conectando productores y compradores de lácteos locales.</p>
+    <p>Proyecto académico UTN · ISW-521 · 2026</p>
+    <p class="copyright">© 2026 Rescate Lácteo. Todos los derechos reservados.</p>
   </footer>
-
-  <script src="js/registro.js"></script>
 </body>
 </html>

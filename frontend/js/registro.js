@@ -15,9 +15,11 @@ var MENSAJES_ERROR = {
   nombre: 'El nombre debe tener al menos 3 caracteres.',
   produccion: 'Ingrese un valor entre 1 y 9999 litros.',
   telefono: 'El teléfono debe tener el formato ####-####.',
+  correo: 'Ingrese un correo electrónico válido.',
+  pin: 'El PIN debe tener exactamente 4 dígitos.',
   comunidad: 'Seleccione una comunidad.',
   producto: 'Seleccione un producto principal.',
-  estado: 'Seleccione un estado.'
+  condicion: 'Seleccione una condición.'
 };
 
 // Elementos DOM
@@ -27,7 +29,10 @@ var comunidad = document.getElementById('comunidad');
 var produccion = document.getElementById('produccion');
 var producto = document.getElementById('producto');
 var telefono = document.getElementById('telefono');
-var estado = document.getElementById('estado');
+var correo = document.getElementById('correo');
+var pin = document.getElementById('pin');
+var condicion = document.getElementById('condicion');
+var historia = document.getElementById('historia');
 var btnLimpiar = document.getElementById('btn-limpiar');
 var listaRegistros = document.getElementById('lista-registros');
 var formMensaje = document.getElementById('form-mensaje');
@@ -68,10 +73,13 @@ function cargarProductoresBase() {
 function existeDuplicado(reg) {
   var nombreNorm = normalizarNombre(reg.nombre);
   var telNorm = reg.contacto.trim();
+  var correoNorm = reg.correo.trim().toLowerCase();
 
   function conflicto(p, excluirId) {
     if (excluirId !== null && p.id === excluirId) return false;
-    return normalizarNombre(p.nombre) === nombreNorm || String(p.contacto).trim() === telNorm;
+    return normalizarNombre(p.nombre) === nombreNorm ||
+      String(p.contacto).trim() === telNorm ||
+      String((p.correo || '')).trim().toLowerCase() === correoNorm;
   }
 
   var excluir = modoEdicion ? idEnEdicion : null;
@@ -99,7 +107,11 @@ function validarCampo(campo) {
     valido = n > 0 && n <= 9999;
   } else if (id === 'telefono') {
     valido = /^\d{4}-\d{4}$/.test(val);
-  } else if (id === 'comunidad' || id === 'producto' || id === 'estado') {
+  } else if (id === 'correo') {
+    valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  } else if (id === 'pin') {
+    valido = /^\d{4}$/.test(val);
+  } else if (id === 'comunidad' || id === 'producto' || id === 'condicion') {
     valido = val !== '';
   }
 
@@ -150,9 +162,12 @@ function crearRegistro() {
     comunidad: comunidad.value,
     produccionDiariaLitros: Number(produccion.value),
     productosPrincipales: [producto.value],
-    estado: estado.value,
+    condicion: condicion.value,
     descripcion: 'Productor registrado desde la plataforma.',
     contacto: telefono.value,
+    correo: correo.value.trim(),
+    pin: pin.value.trim(),
+    historia: historia.value.trim(),
     esLocal: true
   };
 }
@@ -204,24 +219,172 @@ function renderizarLista() {
   registros.forEach(function(r) {
     var item = document.createElement('div');
     item.className = 'item-registro';
-    item.innerHTML = '<div><strong>' + r.nombre + '</strong><div style="font-size:0.85rem;color:#555">' + r.comunidad + ' · ' + r.contacto + '</div></div>';
+    item.innerHTML = '<div><img class="avatar" src="assets/images/avatar-productor.svg" alt="Avatar productor"><div><strong>' + r.nombre + '</strong><div style="font-size:0.85rem;color:#555">' + r.comunidad + ' · ' + r.contacto + '</div></div></div>';
     var acciones = document.createElement('div');
     var btnEditar = document.createElement('button');
     btnEditar.textContent = '✏️ Editar';
     btnEditar.className = 'btn-secundario';
     btnEditar.setAttribute('aria-label', 'Editar registro de ' + r.nombre);
-    btnEditar.addEventListener('click', function() { editarRegistro(r.id); });
+    btnEditar.addEventListener('click', function() { verificarAccionRegistro(r.id, 'editar', function() { editarRegistro(r.id); }); });
     var btnEliminar = document.createElement('button');
     btnEliminar.textContent = '🗑 Eliminar';
     btnEliminar.className = 'btn-peligro';
     btnEliminar.setAttribute('aria-label', 'Eliminar registro de ' + r.nombre);
-    btnEliminar.addEventListener('click', function() { eliminarRegistro(r.id); });
+    btnEliminar.addEventListener('click', function() { verificarAccionRegistro(r.id, 'eliminar', function() { eliminarRegistro(r.id); }); });
     acciones.appendChild(btnEditar);
     acciones.appendChild(document.createTextNode(' '));
     acciones.appendChild(btnEliminar);
     item.appendChild(acciones);
     listaRegistros.appendChild(item);
   });
+}
+
+/**
+ * mostrarConfirmacion
+ * ¿Qué hace?: Muestra una confirmación modal con estilo de la aplicación.
+ * ¿Por qué?: Reemplazar el cuadro nativo confirm() por una experiencia más consistente.
+ * Parámetros: opciones (objeto), callback (function).
+ * Retorna: nada.
+ */
+function mostrarConfirmacion(opciones, callback) {
+  var modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+
+  var box = document.createElement('div');
+  box.className = 'modal-box';
+
+  var titulo = document.createElement('h3');
+  titulo.textContent = opciones.titulo || 'Confirmación';
+
+  var mensaje = document.createElement('p');
+  mensaje.textContent = opciones.mensaje || '';
+
+  var acciones = document.createElement('div');
+  acciones.className = 'modal-actions';
+
+  var btnCancelar = document.createElement('button');
+  btnCancelar.type = 'button';
+  btnCancelar.className = 'btn-secundario';
+  btnCancelar.textContent = opciones.cancelarTexto || 'Cancelar';
+  btnCancelar.addEventListener('click', function() {
+    cerrar(false);
+  });
+
+  var btnConfirmar = document.createElement('button');
+  btnConfirmar.type = 'button';
+  btnConfirmar.className = 'btn-peligro';
+  btnConfirmar.textContent = opciones.confirmarTexto || 'Confirmar';
+  btnConfirmar.addEventListener('click', function() {
+    cerrar(true);
+  });
+
+  acciones.appendChild(btnCancelar);
+  acciones.appendChild(btnConfirmar);
+  box.appendChild(titulo);
+  box.appendChild(mensaje);
+  box.appendChild(acciones);
+  modal.appendChild(box);
+
+  var cerrado = false;
+  function cerrar(confirmado) {
+    if (cerrado) return;
+    cerrado = true;
+    if (document.body.contains(modal)) {
+      document.body.removeChild(modal);
+    }
+    callback(confirmado);
+  }
+
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      cerrar(false);
+    }
+  });
+
+  document.body.appendChild(modal);
+}
+
+function verificarAccionRegistro(id, accion, callback) {
+  var registro = registros.find(function(r) { return r.id === id; });
+  if (!registro) return;
+  var modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+
+  var box = document.createElement('div');
+  box.className = 'modal-box';
+
+  var titulo = document.createElement('h3');
+  titulo.textContent = accion === 'editar' ? 'Verificación para editar' : 'Verificación para eliminar';
+
+  var mensaje = document.createElement('p');
+  mensaje.textContent = 'Ingresa tu PIN de 4 dígitos. Si lo olvidaste, ingresa la cantidad de litros de leche registrada.';
+
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.maxLength = 4;
+  input.placeholder = 'PIN o litros';
+  input.className = 'modal-input';
+
+  var ayuda = document.createElement('p');
+  ayuda.className = 'modal-subtext';
+  ayuda.textContent = 'PIN de seguridad o litros de leche producidos para validar tu registro.';
+
+  var error = document.createElement('p');
+  error.className = 'modal-error';
+
+  var acciones = document.createElement('div');
+  acciones.className = 'modal-actions';
+
+  var btnCancelar = document.createElement('button');
+  btnCancelar.type = 'button';
+  btnCancelar.className = 'btn-secundario';
+  btnCancelar.textContent = 'Cancelar';
+  btnCancelar.addEventListener('click', function() {
+    cerrar(false);
+  });
+
+  var btnConfirmar = document.createElement('button');
+  btnConfirmar.type = 'button';
+  btnConfirmar.className = 'btn-primario';
+  btnConfirmar.textContent = 'Verificar';
+  btnConfirmar.addEventListener('click', function() {
+    var valor = input.value.trim();
+    var validoPin = valor === registro.pin;
+    var validoLitros = Number(valor) === Number(registro.produccionDiariaLitros);
+    if (valor !== '' && (validoPin || validoLitros)) {
+      cerrar(true);
+    } else {
+      error.textContent = 'PIN o litros incorrectos. Intenta nuevamente.';
+    }
+  });
+
+  acciones.appendChild(btnCancelar);
+  acciones.appendChild(btnConfirmar);
+  box.appendChild(titulo);
+  box.appendChild(mensaje);
+  box.appendChild(input);
+  box.appendChild(ayuda);
+  box.appendChild(error);
+  box.appendChild(acciones);
+  modal.appendChild(box);
+
+  var cerrado = false;
+  function cerrar(confirmado) {
+    if (cerrado) return;
+    cerrado = true;
+    if (document.body.contains(modal)) {
+      document.body.removeChild(modal);
+    }
+    if (confirmado) {
+      callback();
+    }
+  }
+
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) cerrar(false);
+  });
+
+  document.body.appendChild(modal);
 }
 
 /**
@@ -232,12 +395,19 @@ function renderizarLista() {
  * Retorna: nada.
  */
 function eliminarRegistro(id) {
-  if (!confirm('¿Eliminar este registro?')) return;
-  registros = registros.filter(function(r) { return r.id !== id; });
-  guardarEnStorage();
-  renderizarLista();
-  ocultarEnlaceProductores();
-  mostrarMensaje('Registro eliminado.', 'exito');
+  mostrarConfirmacion({
+    titulo: 'Eliminar registro',
+    mensaje: '¿Seguro que deseas eliminar este registro? Esta acción no se puede deshacer.',
+    confirmarTexto: 'Sí, eliminar',
+    cancelarTexto: 'Cancelar'
+  }, function(confirmado) {
+    if (!confirmado) return;
+    registros = registros.filter(function(r) { return r.id !== id; });
+    guardarEnStorage();
+    renderizarLista();
+    ocultarEnlaceProductores();
+    mostrarMensaje('Registro eliminado.', 'exito');
+  });
 }
 
 /**
@@ -255,7 +425,10 @@ function editarRegistro(id) {
   produccion.value = r.produccionDiariaLitros;
   producto.value = r.productosPrincipales[0] || '';
   telefono.value = r.contacto;
-  estado.value = r.estado;
+  correo.value = r.correo || '';
+  pin.value = r.pin || '';
+  condicion.value = r.condicion || (r.estado === 'activo' ? 'estable' : (r.estado === 'en dificultad' ? 'en crisis' : (r.estado === 'inactivo' ? 'vulnerabilidad' : '')));
+  historia.value = r.historia || '';
   modoEdicion = true;
   idEnEdicion = id;
   ocultarEnlaceProductores();
@@ -272,10 +445,10 @@ function editarRegistro(id) {
  */
 function resetFormulario() {
   form.reset();
-  [nombre, comunidad, produccion, producto, telefono, estado].forEach(function(c) {
+  [nombre, comunidad, produccion, producto, telefono, correo, pin, condicion].forEach(function(c) {
     c.classList.remove('error', 'valido');
   });
-  ['nombre', 'comunidad', 'produccion', 'producto', 'telefono', 'estado'].forEach(function(id) {
+  ['nombre', 'comunidad', 'produccion', 'producto', 'telefono', 'correo', 'pin', 'condicion'].forEach(function(id) {
     var errorDiv = document.getElementById('error-' + id);
     if (errorDiv) {
       errorDiv.classList.remove('visible');
@@ -347,7 +520,7 @@ function manejarSubmit(e) {
   e.preventDefault();
   ocultarEnlaceProductores();
 
-  var campos = [nombre, comunidad, produccion, producto, telefono, estado];
+  var campos = [nombre, comunidad, produccion, producto, telefono, correo, pin, condicion];
   var todoValido = true;
   for (var i = 0; i < campos.length; i++) {
     if (!validarCampo(campos[i])) {
@@ -363,7 +536,7 @@ function manejarSubmit(e) {
   var reg = crearRegistro();
 
   if (existeDuplicado(reg)) {
-    mostrarMensaje('Ya existe un productor con ese nombre o teléfono.', 'error');
+    mostrarMensaje('Ya existe un productor con ese nombre, teléfono o correo.', 'error');
     return;
   }
 
@@ -391,7 +564,9 @@ document.addEventListener('DOMContentLoaded', function() {
   nombre.addEventListener('input', function(e) { validarCampo(e.target); });
   produccion.addEventListener('input', function(e) { validarCampo(e.target); });
   telefono.addEventListener('input', function(e) { autoFormatearTelefono(e.target); validarCampo(e.target); });
-  ['comunidad', 'producto', 'estado'].forEach(function(id) {
+  correo.addEventListener('input', function(e) { validarCampo(e.target); });
+  pin.addEventListener('input', function(e) { validarCampo(e.target); });
+  ['comunidad', 'producto', 'condicion'].forEach(function(id) {
     document.getElementById(id).addEventListener('change', function(e) { validarCampo(e.target); });
   });
 });

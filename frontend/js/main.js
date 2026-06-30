@@ -13,6 +13,7 @@ var previewCont = document.getElementById('preview-productores');
 var statsCont = document.getElementById('estadisticas');
 var btnMasInfo = document.getElementById('btn-mas-info');
 var infoAdicional = document.getElementById('info-adicional');
+var historiasCont = document.getElementById('historias-productores');
 
 /**
  * obtenerRegistrosLocales
@@ -49,6 +50,25 @@ function combinarProductores(jsonData) {
 
 // Cargar los primeros 3 productores y las estadísticas
 document.addEventListener('DOMContentLoaded', function() {
+  if (historiasCont) {
+    renderHistorias();
+  }
+
+  if (!previewCont || !statsCont) {
+    if (btnMasInfo && infoAdicional) {
+      btnMasInfo.addEventListener('click', function(e) {
+        e.preventDefault();
+        infoAdicional.classList.toggle('visible');
+        if (infoAdicional.classList.contains('visible')) {
+          btnMasInfo.textContent = '📖 Ver menos información';
+        } else {
+          btnMasInfo.textContent = '📖 Ver más información';
+        }
+      });
+    }
+    return;
+  }
+
   fetch('./data/productores.json')
     .then(function(res) { return res.json(); })
     .then(function(data) {
@@ -86,15 +106,17 @@ function esProductorLocal(p) {
  * Retorna: nada.
  */
 function renderPreview(lista) {
+  if (!previewCont) return;
   previewCont.innerHTML = '';
   lista.forEach(function(p) {
     var item = document.createElement('div');
     item.className = 'preview-item';
-    var badgeClass = p.estado === 'activo' ? 'badge-activo' : (p.estado === 'en dificultad' ? 'badge-dificultad' : 'badge-inactivo');
+    var condicion = p.condicion || p.estado;
+    var badgeClass = condicion === 'estable' ? 'badge-activo' : (condicion === 'en crisis' ? 'badge-dificultad' : 'badge-inactivo');
     var badgeNuevo = esProductorLocal(p) ? ' <span class="badge badge-nuevo">Nuevo</span>' : '';
     item.innerHTML = '<h3>' + p.nombre + badgeNuevo + '</h3>' +
       '<p>' + p.comunidad + '</p>' +
-      '<p><span class="badge ' + badgeClass + '">' + p.estado + '</span></p>';
+      '<p><span class="badge ' + badgeClass + '">' + condicion + '</span></p>';
     previewCont.appendChild(item);
   });
 }
@@ -107,9 +129,10 @@ function renderPreview(lista) {
  * Retorna: nada.
  */
 function renderStats(data) {
+  if (!statsCont) return;
   statsCont.innerHTML = '';
   var total = data.length;
-  var activos = data.filter(function(p) { return p.estado === 'activo'; }).length;
+  var activos = data.filter(function(p) { return p.condicion === 'estable'; }).length;
   var litros = data.reduce(function(acc, cur) { return acc + (Number(cur.produccionDiariaLitros) || 0); }, 0);
   var comunidades = data.reduce(function(acc, cur) {
     if (acc.indexOf(cur.comunidad) === -1) acc.push(cur.comunidad);
@@ -131,13 +154,64 @@ function renderStats(data) {
   });
 }
 
+function renderHistorias() {
+  if (!historiasCont) return;
+  var historias = [];
+  var historiaBase = {
+    id: 'destacada-1',
+    nombre: 'Don Manuel',
+    comunidad: 'Cabeceras de Tilarán',
+    historia: 'Durante años trabajó con la empresa SIGMA, entregando su esfuerzo diario a la lechería para sostener a su familia. Cuando la empresa decidió dejarlo a “pata” por decisiones que no consideraron su necesidad, él siguió adelante con dignidad, porque nunca estudió una carrera y su trabajo era su única forma de sostener a los suyos.'
+  };
+  historias.push(historiaBase);
+
+  var locales = obtenerRegistrosLocales();
+  locales.forEach(function(p) {
+    if (p.historia && p.historia.trim()) {
+      historias.push({
+        id: 'local-' + p.id,
+        nombre: p.nombre,
+        comunidad: p.comunidad,
+        historia: p.historia
+      });
+    }
+  });
+
+  historiasCont.innerHTML = '';
+
+  var tarjetaPrincipal = document.createElement('div');
+  tarjetaPrincipal.className = 'noticia-item';
+  tarjetaPrincipal.innerHTML = '<img src="assets/images/logo.png" alt="Logo de Rescate Lácteo">' +
+    '<div class="noticia-contenido">' +
+    '<h3>Rescate Lácteo</h3>' +
+    '<p class="noticia-meta">Conectamos productores y compradores</p>' +
+    '<p>Nosotros trabajamos para visibilizar la realidad de los productores lecheros, apoyar su comercialización y fortalecer su voz en la cadena. Aquí acompañamos historias de esfuerzo, dignidad y esperanza para que no queden solas.</p>' +
+    '</div>';
+  historiasCont.appendChild(tarjetaPrincipal);
+
+  historias.forEach(function(h, index) {
+    var item = document.createElement('div');
+    item.className = 'noticia-item';
+    var imagen = 'assets/images/campesino-' + ((index % 5) + 1) + '.jpg';
+    item.innerHTML = '<img src="' + imagen + '" alt="Foto de ' + h.nombre + '">' +
+      '<div class="noticia-contenido">' +
+      '<h3>' + h.nombre + '</h3>' +
+      '<p class="noticia-meta">' + h.comunidad + '</p>' +
+      '<p>' + h.historia + '</p>' +
+      '</div>';
+    historiasCont.appendChild(item);
+  });
+}
+
 // Evento del botón interactivo
-btnMasInfo.addEventListener('click', function(e) {
-  e.preventDefault();
-  infoAdicional.classList.toggle('visible');
-  if (infoAdicional.classList.contains('visible')) {
-    btnMasInfo.textContent = '📖 Ver menos información';
-  } else {
-    btnMasInfo.textContent = '📖 Ver más información';
-  }
-});
+if (btnMasInfo && infoAdicional) {
+  btnMasInfo.addEventListener('click', function(e) {
+    e.preventDefault();
+    infoAdicional.classList.toggle('visible');
+    if (infoAdicional.classList.contains('visible')) {
+      btnMasInfo.textContent = '📖 Ver menos información';
+    } else {
+      btnMasInfo.textContent = '📖 Ver más información';
+    }
+  });
+}
