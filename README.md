@@ -195,6 +195,23 @@ Se utiliza para:
 
 ---
 
+## 🚀 Publicación en GitHub Pages
+
+El sitio ya está preparado para publicarse desde la carpeta [docs](docs).
+
+Pasos recomendados:
+
+1. En GitHub, abre Settings > Pages.
+2. En Source selecciona GitHub Actions.
+3. Haz push de los cambios a la rama main o develop.
+4. El workflow en [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml) publicará el sitio automáticamente.
+
+Una vez finalizado, la web estará disponible en:
+
+https://yaustinxyz.github.io/Rescate-l-cteo/
+
+---
+
 ## 🚀 Para la Defensa
 
 ### Demostración Recomendada

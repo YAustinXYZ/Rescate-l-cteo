@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Registrar Comprador · Rescate Lácteo</title>
+  <link rel="stylesheet" href="css/interface.css">
+  <link class="ICONO-NAVEGADOR" rel="icon" type="image/x-icon" href="assets/images/logo.png">
+</head>
+<body>
+  <header>
+     <div class="brand-logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="assets/images/logo.png" alt="Rescate Lácteo logo" width="48" height="48" style="display:block; width:48px; height:48px;">
+      <a href="index.html" aria-label="Rescate Lácteo" style="display:inline-flex; align-items:center; color: inherit; font-weight: 700;">Rescate lácteo</a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="solucion.html">Productores</a></li>
+        <li><a href="compradores.html">Compradores</a></li>
+        <li><a href="registro.html" class="activo">Registrar</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="encabezado-pagina">
+      <h1>Registrar Comprador</h1>
+    </section>
+
+    <div class="contenedor-principal">
+      <div class="columna-formulario">
+        <form id="form-comprador" class="formulario" novalidate>
+          <div class="grupo-campo">
+            <label for="nombre">Nombre completo</label>
+            <input id="nombre" name="nombre" type="text" required minlength="3">
+            <div class="mensaje-error-campo" id="error-nombre"></div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="comunidad">Región</label>
+            <select id="comunidad" name="comunidad" required>
+              <option value="">Seleccione...</option>
+              <option>Guanacaste Norte</option>
+              <option>Guanacaste Sur</option>
+              <option>Puntarenas</option>
+              <option>Alajuela</option>
+              <option>Heredia</option>
+              <option>San José</option>
+            </select>
+            <div class="mensaje-error-campo" id="error-comunidad"></div>
+          </div>
+
+          <div class="grupo-campo" id="campo-lugar-especifico" hidden>
+            <label for="lugar-especifico">Lugar específico</label>
+            <select id="lugar-especifico" name="lugar-especifico">
+              <option value="">Seleccione...</option>
+            </select>
+            <div class="mensaje-error-campo" id="error-lugar-especifico"></div>
+          </div>
+
+          <div class="grupo-campo" id="campo-produccion" hidden>
+            <label for="produccion">Demanda diaria estimada (litros)</label>
+            <input id="produccion" name="produccion" type="number" min="1" max="9999">
+            <div class="mensaje-error-campo" id="error-produccion"></div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="producto">Productos buscados</label>
+            <select id="producto" name="producto" required>
+              <option value="">Seleccione...</option>
+              <option>Leche fresca</option>
+              <option>Queso</option>
+              <option>Natilla</option>
+              <option>Mantequilla</option>
+              <option>Yogurt</option>
+              <option>Helados artesanales</option>
+            </select>
+            <div class="mensaje-error-campo" id="error-producto"></div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="telefono">Teléfono (####-####)</label>
+            <input id="telefono" name="telefono" type="text" required>
+            <div class="mensaje-error-campo" id="error-telefono"></div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="correo">Correo electrónico</label>
+            <input id="correo" name="correo" type="email" required>
+            <div class="mensaje-error-campo" id="error-correo"></div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="pin">PIN de seguridad (4 dígitos)</label>
+            <input id="pin" name="pin" type="text" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
+            <div class="mensaje-error-campo" id="error-pin"></div>
+          </div>
+
+          <div class="fila-botones">
+            <button type="submit" class="btn-primario">💾 Guardar Registro</button>
+            <button type="button" id="btn-limpiar" class="btn-secundario">🗑 Limpiar Formulario</button>
+          </div>
+
+          <div id="form-mensaje" class="mensaje"></div>
+          <div id="form-enlace-compradores" class="enlace-post-registro" hidden>
+            <a href="compradores.html" class="btn-secundario">Ver en listado de compradores →</a>
+          </div>
+        </form>
+      </div>
+
+      <div class="columna-registros">
+        <section class="lista-registros" id="lista-registros">
+          <h2>Registros guardados</h2>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Rescate Lácteo — Conectando productores y compradores de lácteos locales.</p>
+    <p>Proyecto académico UTN · ISW-521 · 2026</p>
+  </footer>
+
+  <script src="js/registro-comprador.js"></script>
+</body>
+</html>

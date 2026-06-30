@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Rescate Lácteo conecta productores y compradores de leche en comunidades rurales de Costa Rica.">
+  <title>Rescate Lácteo</title>
+  <link rel="stylesheet" href="css/interface.css">
+  <link class="ICONO-NAVEGADOR" rel="icon" type="image/x-icon" href="assets/images/logo.png">
+</head>
+
+<body>
+  <header>
+    <div class="brand-logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="assets/images/logo.png" alt="Rescate Lácteo logo" width="48" height="48" style="display:block; width:48px; height:48px;">
+      <a href="index.html" aria-label="Rescate Lácteo" style="display:inline-flex; align-items:center; color: inherit; font-weight: 700;">Rescate lácteo</a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html" class="activo">Inicio</a></li>
+        <li><a href="solucion.html">Productores</a></li>
+        <li><a href="compradores.html">Compradores</a></li>
+        <li><a href="registro.html">Registrar</a></li>
+        <li><a href="noticias.html">Noticias</a></li>
+      </ul>
+    </nav>
+
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="texto-centro">Rescate Lácteo </h1>
+
+      <div class="botones">
+        <a class="btn-primario" href="solucion.html">Ver Productores</a>
+        <a class="btn-secundario" href="registro.html">Registrar Productor</a>
+      </div>
+    </section>
+
+    <section class="container problema">
+      <h2>¿Cuál es el problema?</h2>
+      <div class="problema-grid">
+        <div>
+          <p>Productores en comunidades como Cabeceras de Tilarán, Tronadora, El Dos y La Florida enfrentan dificultades
+            para comercializar su leche por falta de enlaces con compradores y problemas logísticos. Rescate Lácteo crea
+            un punto de encuentro digital para facilitar la venta y coordinación.</p>
+        </div>
+        <div class="problema-emoji">
+          <p>Agricultura rural</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container como-funciona">
+      <h2>¿Cómo funciona Rescate Lácteo?</h2>
+      <div class="como-funciona">
+        <div class="paso">
+          <h3>1. Registra tu producción</h3>
+          <p>Registra datos básicos para que compradores conozcan tu oferta.</p>
+        </div>
+        <div class="paso">
+          <h3>2. Consulta productores</h3>
+          <p>Filtra por comunidad, condición y productos principales.</p>
+        </div>
+        <div class="paso">
+          <h3>3. Conecta y vende</h3>
+          <p>Contacta directamente al productor y coordina la compra.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque-principal">
+      <div class="bloque-imagen-lado bloque-imagen-izquierda">
+        <img src="assets/images/aux3.jpeg" alt="Región de Tilarán">
+      </div>
+      <div class="bloque-contenido">
+        <h2>Sobre Rescate Lácteo</h2>
+        <p>Rescate Lácteo es una iniciativa que conecta productores de zonas rurales de Costa Rica con compradores
+          locales y regionales. Nuestro objetivo es facilitar ventas, coordinación y apoyo técnico para mejorar la
+          comercialización y resiliencia de los productores.</p>
+        <p>A través de nuestra plataforma digital, los productores pueden registrar su información, consultar otras
+          ofertas de la zona y conectar directamente con compradores interesados en sus productos lácteos de alta
+          calidad.</p>
+        <div class="botones-bloque">
+          <a class="btn-primario" href="solucion.html">Explorar productores</a>
+          <a class="btn-secundario" href="registro.html">Registrarme ahora</a>
+        </div>
+      </div>
+      <div class="bloque-imagen-lado bloque-imagen-derecha">
+        <img src="assets/images/aux2.jpeg" alt="Comunidades productoras">
+      </div>
+    </section>
+
+    <section class="container beneficios">
+      <h2>Productores en nuestra plataforma</h2>
+      <div id="preview-productores" class="preview-list"></div>
+      <div class="texto-centro"><a class="btn-secundario" href="solucion.html">Ver todos los productores</a></div>
+    </section>
+
+    <section class="container tiendas-fisicas">
+      <h2>Tiendas físicas en Guanacaste y GAM</h2>
+      <div class="preview-list">
+        <article class="preview-item">
+          <h3>Mercado Lácteo Guanacaste</h3>
+          <p>Ubicación: Liberia, Guanacaste</p>
+          <p>Atención a compradores locales y visitantes, especializada en productos lácteos y derivados.</p>
+        </article>
+        <article class="preview-item">
+          <h3>La Finca del Queso</h3>
+          <p>Ubicación: Nicoya, Guanacaste</p>
+          <p>Tienda física con productos frescos y opciones de contacto directo con productores.</p>
+        </article>
+        <article class="preview-item">
+          <h3>Casa Láctea San José</h3>
+          <p>Ubicación: San José, GAM</p>
+          <p>Centro de distribución en la Gran Área Metropolitana para compradores y tiendas aliadas.</p>
+        </article>
+        <article class="preview-item">
+          <h3>Tiendas Campesinas GAM</h3>
+          <p>Ubicación: Alajuela, GAM</p>
+          <p>Espacio físico para venta y promoción de productos lácteos de pequeños productores.</p>
+        </article>
+      </div>
+      <div class="texto-centro"><a class="btn-secundario" href="solucion.html">Ver productores y tiendas</a></div>
+    </section>
+
+    <section class="container estadisticas-json">
+      <h2>Nuestra comunidad en números</h2>
+      <div id="estadisticas" class="stats-grid"></div>
+    </section>
+
+    <section class="container">
+      <button id="btn-mas-info" class="btn-secundario">Ver más información</button>
+      <p id="info-adicional" class="mensaje">Rescate Lácteo es un proyecto educativo y comunitario que busca mejorar la
+        comercialización y resiliencia de productores locales.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Rescate Lácteo — Conectando productores y compradores de lácteos locales.</p>
+    <p>Proyecto académico UTN · ISW-521 · 2026</p>
+    <p class="copyright">© 2026 Rescate Lácteo. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
