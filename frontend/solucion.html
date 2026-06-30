@@ -15,16 +15,16 @@
 </head>
 <body>
   <header>
-    <div class="brand-logo">
-      <a href="index.html"  aria-label="Rescate Lácteo">
-        <img src="assets/images/logo.png" alt="Rescate Lácteo logo"> Rescate lácteo
-      </a>
+     <div class="brand-logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="assets/images/logo.png" alt="Rescate Lácteo logo" width="48" height="48" style="display:block; width:48px; height:48px;">
+      <a href="index.html" aria-label="Rescate Lácteo" style="display:inline-flex; align-items:center; color: inherit; font-weight: 700;">Rescate lácteo</a>
     </div>
 
     <nav>
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="solucion.html" class="activo">Productores</a></li>
+        <li><a href="compradores.html">Compradores</a></li>
         <li><a href="registro.html">Registrar</a></li>
         <li><a href="noticias.html">Noticias</a></li>
       </ul>
@@ -48,11 +48,11 @@
       <select id="filtro-comunidad" class="select-filtro">
         <option value="">Todas las comunidades</option>
       </select>
-      <select id="filtro-estado" class="select-filtro">
-        <option value="">Todos los estados</option>
-        <option value="activo">Activo</option>
-        <option value="en dificultad">En dificultad</option>
-        <option value="inactivo">Inactivo</option>
+      <select id="filtro-condicion" class="select-filtro">
+        <option value="">Todas las condiciones</option>
+        <option value="estable">Estable</option>
+        <option value="en crisis">En crisis</option>
+        <option value="vulnerabilidad">Vulnerabilidad</option>
       </select>
       <button id="btn-limpiar-filtros" class="btn-peligro">✖ Limpiar filtros</button>
     </section>
@@ -69,8 +69,10 @@
   </main>
 
   <footer>
-    <p>🥛 Rescate Lácteo — Apoyando a los productores de Tilarán</p>
-    <p>ISW-521 Programación en Ambiente Web I · UTN · 2026</p>
+    <p>Rescate Lácteo — Conectando productores y compradores de lácteos locales.</p>
+    <p>Proyecto académico UTN · ISW-521 · 2026</p>
+    <p style="font-size: 0.75rem; margin-top: 10px; opacity: 0.85;">Fotografías de campesinos costarricenses utilizadas con propósitos educativos.</p>
+    <p class="copyright">© 2026 Rescate Lácteo. Todos los derechos reservados.</p>
   </footer>
 
   <script src="js/solucion.js"></script>

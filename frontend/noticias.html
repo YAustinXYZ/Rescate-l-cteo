@@ -9,15 +9,15 @@
 </head>
 <body>
   <header>
-    <div class="brand-logo">
-      <a href="index.html"  aria-label="Rescate Lácteo">
-        <img src="assets/images/logo.png" alt="Rescate Lácteo logo"> Rescate lácteo
-      </a>
+     <div class="brand-logo" style="display:flex; align-items:center; gap:12px;">
+      <img src="assets/images/logo.png" alt="Rescate Lácteo logo" width="48" height="48" style="display:block; width:48px; height:48px;">
+      <a href="index.html" aria-label="Rescate Lácteo" style="display:inline-flex; align-items:center; color: inherit; font-weight: 700;">Rescate lácteo</a>
     </div>
     <nav>
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="solucion.html">Productores</a></li>
+        <li><a href="compradores.html">Compradores</a></li>
         <li><a href="registro.html">Registrar</a></li>
         <li><a href="noticias.html" class="activo">Noticias</a></li>
       </ul>
@@ -31,51 +31,9 @@
     </section>
 
     <section class="container noticias-zona">
-      <h2>Últimas noticias</h2>
-      <div class="noticias-grid">
-        <div class="noticia-item">
-          <img src="assets/images/aux3.jpeg" alt="Paisaje de Tilarán">
-          <div class="noticia-contenido">
-            <h3>Paisajes de Tilarán</h3>
-            <p>La región de Tilarán es conocida por sus paisajes montañosos y sus condiciones ideales para la ganadería lechera. Los productores locales aprovechan la riqueza natural y el clima favorable para producir leche de alta calidad.</p>
-          </div>
-        </div>
-        <div class="noticia-item">
-          <img src="assets/images/aux1.jpg" alt="Comunidades rurales">
-          <div class="noticia-contenido">
-            <h3>Comunidades rurales en acción</h3>
-            <p>Las comunidades como Cabeceras de Tilarán, Tronadora y El Dos son el corazón de nuestro proyecto. Aquí, productores de diferentes tamaños trabajan diariamente para abastecer mercados locales y regionales con productos lácteos frescos y de calidad.</p>
-          </div>
-        </div>
-        <div class="noticia-item">
-          <img src="assets/images/logo.png" alt="Logo Rescate Lácteo">
-          <div class="noticia-contenido">
-            <h3>Rescate Lácteo: Misión y Visión</h3>
-            <p>Nuestro proyecto busca conectar a productores de zonas rurales de Costa Rica con compradores locales y regionales. Facilitamos ventas, coordinación y apoyo técnico para mejorar la comercialización y resiliencia de los productores.</p>
-          </div>
-        </div>
-        <div class="noticia-item">
-          <img src="assets/images/aux2.jpeg" alt="Producción de leche">
-          <div class="noticia-contenido">
-            <h3>Producción sostenible</h3>
-            <p>Los productores de la región implementan prácticas sostenibles para garantizar la calidad de la leche y el cuidado del medio ambiente. Con el apoyo de Rescate Lácteo, logran optimizar sus procesos y acceder a mejores mercados.</p>
-          </div>
-        </div>
-        <div class="noticia-item">
-          <img src="assets/images/aux1.jpg" alt="Mercados locales">
-          <div class="noticia-contenido">
-            <h3>Conexión con mercados locales</h3>
-            <p>Rescate Lácteo facilita la conexión directa entre productores y compradores, eliminando intermediarios innecesarios. Esto permite mejores precios para productores y productos frescos para compradores.</p>
-          </div>
-        </div>
-        <div class="noticia-item">
-          <img src="assets/images/logo.png" alt="Apoyo técnico">
-          <div class="noticia-contenido">
-            <h3>Apoyo técnico y capacitación</h3>
-            <p>Mediante Rescate Lácteo, los productores acceden a asesoría técnica, información de mercados y capacitación en comercialización. Esto fortalece sus capacidades y mejora su competitividad en el mercado.</p>
-          </div>
-        </div>
-      </div>
+      <h2>Historias de productores</h2>
+      <p class="texto-centro">Aquí se publican relatos de productores que quieren compartir su experiencia, sus retos y la realidad que enfrentan cada día.</p>
+      <div class="noticias-grid" id="historias-productores"></div>
     </section>
 
     <section class="container">
@@ -87,8 +45,8 @@
   </main>
 
   <footer>
-    <p>🥛 Rescate Lácteo — Apoyando a los productores de Tilarán</p>
-    <p>ISW-521 Programación en Ambiente Web I · UTN · 2026</p>
+    <p>Rescate Lácteo — Conectando productores y compradores de lácteos locales.</p>
+    <p>Proyecto académico UTN · ISW-521 · 2026</p>
   </footer>
 
   <script src="js/main.js"></script>
